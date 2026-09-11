@@ -16,17 +16,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Build Tools
+      - name: Install Build Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev
-          pip install --upgrade pip
-          pip install buildozer cython==0.29.33
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake
+          pip install --upgrade pip setuptools
+          pip install "cython<3.0.0" buildozer
 
       - name: Build APK with Buildozer
         run: |
           yes | buildozer -v android debug
 
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TableBuddy-APK
+          path: bin/*.apk
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
